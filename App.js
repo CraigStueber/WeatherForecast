@@ -10,6 +10,7 @@ import {
 } from "expo-location";
 import { MeteoAPI } from "./api/meteo";
 import { useFonts } from "expo-font";
+
 export default function App() {
   const [coordinates, setCoordinates] = useState();
   const [weather, setWeather] = useState();
@@ -26,8 +27,8 @@ export default function App() {
     }
   }, [coordinates]);
 
-  async function fetchWeatherByCoords(coordinates) {
-    const weatherResponce = await MeteoAPI.fetchWeatherByCoords(coordinates);
+  async function fetchWeatherByCoords(coords) {
+    const weatherResponce = await MeteoAPI.fetchWeatherByCoords(coords);
     setWeather(weatherResponce);
   }
 
@@ -43,6 +44,7 @@ export default function App() {
       setCoordinates({ lat: "48.85", lng: "2.35" });
     }
   }
+  console.log(weather);
   return (
     <ImageBackground
       imageStyle={s.img}
