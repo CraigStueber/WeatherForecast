@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-
+import {s} from './Home.style';
 export function Home() {
-  return <Text>Hello From Home</Text>;
+  return <Text style={s.test}>Hello From Home</Text>;
 }
