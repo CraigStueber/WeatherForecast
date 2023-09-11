@@ -10,9 +10,21 @@ import {
 } from "expo-location";
 export default function App() {
   const [coordinates, setCoordinates] = useState();
+  const [weather, setWeather] = useState();
   useEffect(() => {
     getUserCorrdinates();
   }, []);
+
+  useEffect(() => {
+    if (coordinates) {
+      fetchWeatherByCoords(coordinates);
+    }
+  }, [coordinates]);
+
+  async function fetchWeatherByCoords(coordinates) {
+    const weatherResponce = await MeteoAPI.fetchWeatherByCoords(coordinates);
+    setWeather(weatherResponce);
+  }
 
   async function getUserCorrdinates() {
     const { status } = await requestForegroundPermissionsAsync();
