@@ -59,9 +59,7 @@ export default function App() {
     >
       <SafeAreaProvider>
         <SafeAreaView style={s.container}>
-          {isFontLoaded && weather && city && (
-            <Home city={city} weather={weather} />
-          )}
+          {isFontLoaded && weather && <Home city={city} weather={weather} />}
         </SafeAreaView>
       </SafeAreaProvider>
     </ImageBackground>
