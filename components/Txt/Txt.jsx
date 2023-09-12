@@ -1,6 +1,6 @@
 import { Text, useWindowDimensions } from "react-native";
 import { s } from "./Txt.style";
-const IPHONE_13_RATIO = 0.001184834123222749;
+const PHONE_RATIO = 0.001184834123222749;
 
 export function Txt({ children, style, ...restProps }) {
   const fontSize = style?.fontSize || s.txt.fontSize;
@@ -12,7 +12,7 @@ export function Txt({ children, style, ...restProps }) {
         s.txt,
         style,
         {
-          fontSize: Math.round(fontSize * IPHONE_13_RATIO * height),
+          fontSize: Math.round(fontSize * PHONE_RATIO * height),
         },
       ]}
       {...restProps}
