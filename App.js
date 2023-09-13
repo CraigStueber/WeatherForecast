@@ -2,7 +2,7 @@ import { s } from "./App.style";
 import { Home } from "./pages/Home/Home";
 import { Forecasts } from "./pages/Forecasts/Forecasts";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { ImageBackground } from "react-native";
+import { Alert, ImageBackground } from "react-native";
 import backgroundImage from "./assets/background.png";
 import { useEffect, useState } from "react";
 import {
@@ -41,6 +41,16 @@ export default function App() {
     const weatherResponce = await MeteoAPI.fetchWeatherByCoords(coords);
     setWeather(weatherResponce);
   }
+  // onSubmitSearch
+
+  async function fetchCoordsByCity(city) {
+    try {
+      const coordsResponce = await MeteoAPI.fetchCoordsByCity(city);
+      setCoordinates(coordsResponce);
+    } catch (err) {
+      Alert.alert("BITCH SPELL BETTER!!", err);
+    }
+  }
   async function fetchCityByCoords(coords) {
     const cityResponce = await MeteoAPI.fetchCityByCoords(coords);
     setCity(cityResponce);
@@ -74,7 +84,13 @@ export default function App() {
                 initialRouteName="Home"
               >
                 <Stack.Screen name="Home">
-                  {() => <Home city={city} weather={weather} />}
+                  {() => (
+                    <Home
+                      city={city}
+                      weather={weather}
+                      onSubmitSearch={fetchCoordsByCity}
+                    />
+                  )}
                 </Stack.Screen>
                 <Stack.Screen name="Forecasts" component={Forecasts} />
               </Stack.Navigator>
