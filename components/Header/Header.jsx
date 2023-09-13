@@ -1,17 +1,18 @@
 import { TouchableOpacity, View } from "react-native";
 import { Txt } from "../Txt/Txt";
 import { s } from "./Header.style";
+import { useNavigation } from "@react-navigation/native";
 
-export function Header({}) {
+export function Header({ city }) {
+  const nav = useNavigation();
   return (
-    <View>
-      <TouchableOpacity>
+    <View style={s.container}>
+      <TouchableOpacity style={s.back_btn} onPress={nav.goBack}>
         <Txt>{"<"}</Txt>
       </TouchableOpacity>
-      <View>
-        <Txt></Txt>
-        <Txt></Txt>
-        <Txt></Txt>
+      <View style={s.header_txts}>
+        <Txt style={s.city}>{city.toUpperCase()}</Txt>
+        <Txt style={s.subtitle}>7 Day Forecast</Txt>
       </View>
     </View>
   );

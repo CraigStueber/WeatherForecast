@@ -6,5 +6,5 @@ import { useRoute } from "@react-navigation/native";
 export function Forecasts({}) {
   const { params } = useRoute();
   console.log(params);
-  return <Header/>;
+  return <Header city={params.city} />;
 }
