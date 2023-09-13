@@ -1,5 +1,6 @@
 import { s } from "./App.style";
 import { Home } from "./pages/Home/Home";
+import { Forecasts } from "./pages/Forecasts/Forecasts";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { ImageBackground } from "react-native";
 import backgroundImage from "./assets/background.png";
@@ -8,9 +9,23 @@ import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
 } from "expo-location";
+import { MeteoAPI } from "./api/meteo";
+import { useFonts } from "expo-font";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+const Stack = createNativeStackNavigator();
+const navTheme = {
+  colors: {
+    background: "transparent",
+  },
+};
 export default function App() {
   const [coordinates, setCoordinates] = useState();
   const [weather, setWeather] = useState();
+  const [city, setCity] = useState();
+  const [isFontLoaded] = useFonts({
+    "Alata-Regular": require("./assets/fonts/Alata-Regular.ttf"),
+  });
   useEffect(() => {
     getUserCorrdinates();
   }, []);
@@ -18,12 +33,17 @@ export default function App() {
   useEffect(() => {
     if (coordinates) {
       fetchWeatherByCoords(coordinates);
+      fetchCityByCoords(coordinates);
     }
   }, [coordinates]);
 
-  async function fetchWeatherByCoords(coordinates) {
-    const weatherResponce = await MeteoAPI.fetchWeatherByCoords(coordinates);
+  async function fetchWeatherByCoords(coords) {
+    const weatherResponce = await MeteoAPI.fetchWeatherByCoords(coords);
     setWeather(weatherResponce);
+  }
+  async function fetchCityByCoords(coords) {
+    const cityResponce = await MeteoAPI.fetchCityByCoords(coords);
+    setCity(cityResponce);
   }
 
   async function getUserCorrdinates() {
@@ -38,17 +58,30 @@ export default function App() {
       setCoordinates({ lat: "48.85", lng: "2.35" });
     }
   }
+
   return (
-    <ImageBackground
-      imageStyle={s.img}
-      style={s.img_background}
-      source={backgroundImage}
-    >
-      <SafeAreaProvider>
-        <SafeAreaView style={s.container}>
-          <Home />
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </ImageBackground>
+    <NavigationContainer theme={navTheme}>
+      <ImageBackground
+        imageStyle={s.img}
+        style={s.img_background}
+        source={backgroundImage}
+      >
+        <SafeAreaProvider>
+          <SafeAreaView style={s.container}>
+            {isFontLoaded && weather && (
+              <Stack.Navigator
+                screenOptions={{ headerShown: false, animation: "fade" }}
+                initialRouteName="Home"
+              >
+                <Stack.Screen name="Home">
+                  {() => <Home city={city} weather={weather} />}
+                </Stack.Screen>
+                <Stack.Screen name="Forecasts" component={Forecasts} />
+              </Stack.Navigator>
+            )}
+          </SafeAreaView>
+        </SafeAreaProvider>
+      </ImageBackground>
+    </NavigationContainer>
   );
 }

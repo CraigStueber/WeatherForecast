@@ -1,16 +1,34 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { s } from "./Home.style";
-export function Home() {
+import { Txt } from "../../components/Txt/Txt";
+import { MeteoBasic } from "../../components/MeteoBasic/MeteoBasic";
+import { getWeatherInterpretation } from "../../utils/meteo-utils";
+import { MeteoAdvanced } from "../../components/MeteoAdvanced/MeteoAdvanced";
+export function Home({ weather, city }) {
+  const currentWeather = weather.current_weather;
+
+  const currentInterpretation = getWeatherInterpretation(
+    currentWeather.weathercode
+  );
   return (
     <>
       <View style={s.meteo_basic}>
-        <Text style={s.txt}>Basic Weather Info</Text>
+        <MeteoBasic
+          dailyWeather={weather.daily}
+          interpretation={currentInterpretation}
+          temperature={Math.round(currentWeather.temperature)}
+          city={city}
+        />
       </View>
       <View style={s.searchbar_container}>
-        <Text style={s.txt}>SearchBar</Text>
+        <Txt>SearchBar</Txt>
       </View>
       <View style={s.meteo_advanced}>
-        <Text style={s.txt}>Advanced Weather Info</Text>
+        <MeteoAdvanced
+          sunrise={weather.daily.sunrise[0].split("T")[1]}
+          sunset={weather.daily.sunset[0].split("T")[1]}
+          windSpeed={currentWeather.windspeed}
+        />
       </View>
     </>
   );
